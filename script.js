@@ -17,12 +17,12 @@ const year0 = (newInvestments) => ({
 
 const nextYear = (years, newInvestments) => {
   const previousYear = years[years.length - 1]
-  const holdenYear = years[years.length - (holdTime - 1)] || year0(newInvestments)
+  const holdenYear = years[years.length - (holdTime)] || year0(newInvestments)
   const totalInvested = previousYear.endingInvestedBalance
   const prefferedReturn = totalInvested * returnPercent
-
+  
   const profitsOnSale = years.length >= holdTime ? (holdenYear.profitsOnSale - newInvestments) * targetEM + newInvestments * (1 + returnPercent * holdTime) : 0
-
+  
   const result = {
     number: years.length,
     totalInvested,
@@ -31,9 +31,9 @@ const nextYear = (years, newInvestments) => {
     endingInvestedBalance: totalInvested - newInvestments + profitsOnSale,
     cashFlow: prefferedReturn / 12
   }
-
+  
   console.log(result, holdenYear)
-
+  
   return result
 }
 
@@ -42,14 +42,15 @@ function calculator(){
   return {
     newInvestments: 100000, // 100,000.00
     numberOfInvestments: 1,
-    years: [],
-    init(){
+    years(){
+      const years = []
       const newInvestments = -this.newInvestments * this.numberOfInvestments
-      this.years.push(year0(newInvestments))
+      years.push(year0(newInvestments))
       for (let index = 0; index < 30; index++) {
-        console.log()
-        this.years.push(nextYear(this.years, newInvestments))      
+        years.push(nextYear(years, newInvestments))      
       }
+      return years
     }
   }
+  
 }
