@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script src="script.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  
+  <div x-data="calculator">
+    <div class="row">
+      <div>
+        <a href="/">go back</a>
+        <h1>Pricing calculator</h1>
+        <p>
+          View the results of your investments
+        </p>
+        <form>
+          <div>
+            <label class="text-input">
+              New Investments
+              <input type="text" x-model="newInvestments">
+            </label>
+          </div>
+          <div>
+            <label>
+              Number of Investments
+              <input type="text" x-model="numberOfInvestments">
+            </label>            
+          </div>
+        </form>
+      </div>
+      <div class="accordion" x-data="accordion">
+        <div @click="toggle" class="accordion-toggle">
+          With Elevest
+          <svg :style="{'transform': open ? 'rotate(90deg)' : 'rotate(0deg)'}" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.59 7.41L13.17 12L8.59 16.59L10 18L16 12L10 6L8.59 7.41Z" fill="currentColor"/></svg>
+        </div>
+        <div x-show="open">
+          <template x-for="(year, i) in selectedYears">
+            <div class="flex-between">
+              <span x-text="'Year ' + year.number"></span>
+              $ <span x-text="parseFloat(year.totalInvested).toFixed(2)"></span>
+            </div>
+          </template>
+        </div>
+      </div>
+    </div>
+    <div class="price-bar-group">
+      <template x-for="(year, i) in selectedYears">
+        <div class="price-bar-wrapper">
+          <div class="price-bar" :style="{'--value': year.totalInvested, '--maxValue': getBiggerValue()}" x-text="toSpecialNotation(year.totalInvested)"></div>
+          <div x-text="'Year ' + year.number"></div>
+        </div>
+      </template>
+    </div>
+  </div>
+</body>
+</html>

@@ -6,51 +6,26 @@
   <title>Document</title>
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
   <script src="script.js"></script>
+  <link rel="stylesheet" href="style.css">
 </head>
-<body>
- 
-<div x-data="calculator">
-  <label>
-    New Investments
-    <input type="text" x-model="newInvestments">
-  </label>
-
-  <label>
-    Number of Investments
-    <input type="text" x-model="numberOfInvestments">
-  </label>
-
-<table>
-  <tr>
-    <th>Year</th>
-    <th>Total invested</th>
-    <th>Preffered Return</th>
-    <th>Profits On Sale</th>
-    <th>Ending Invested Balance</th>
-    <th>Cash Flow</th>
-  </tr>
-  <template x-for="(year, i) in years">
-    <tr>
-      <td x-text="i"></td>
-      <td>
-        $ <span x-text="parseFloat(year.totalInvested).toFixed(2)"></span>
-      </td>
-      <td>
-        $ <span x-text="parseFloat(year.prefferedReturn).toFixed(2)"></span>
-      </td>
-      <td>
-        $ <span x-text="parseFloat(year.profitsOnSale).toFixed(2)"></span>
-      </td>
-      <td>
-        $ <span x-text="parseFloat(year.endingInvestedBalance).toFixed(2)"></span>
-      </td>
-      <td>
-        $ <span x-text="parseFloat(year.cashFlow).toFixed(2)"></span>
-      </td>
-    </tr>
-  </template>
-</table>
-
-</div>
+<body>  
+  <div>
+    <form action="/results.html" x-data="multiStepForm" @submit.prevent="submit">
+      <div x-show="step == 1">
+        <label>
+          How much are you willing to invest?
+          <input type="text" x-model="newInvestments" name="newInvestments" id="" value="" required>
+        </label>
+      </div>
+      <div x-show="step == 2">
+        <label>
+          How many times per year?
+          <input type="number" x-model="numberOfInvestments" name="numberOfInvestments" id="" value="1">
+        </label>
+      </div>      
+      <button x-show="step > 1" @click="--step">Back</button>
+      <button type="submit">Next</button>
+    </form>
+  </div>
 </body>
 </html>

@@ -1,3 +1,9 @@
+const urlParams = new URLSearchParams(window.location.search);
+const initial = {
+  newInvestments: urlParams.get('newInvestments') ?? 1000000,
+  numberOfInvestments: urlParams.get('numberOfInvestments') ?? 1,
+}
+
 const prefferedReturn = (totalInvested, prefReturn = 0.06) =>
   totalInvested * prefReturn
 
@@ -40,8 +46,8 @@ const nextYear = (years, newInvestments) => {
 
 function calculator(){
   return {
-    newInvestments: 100000, // 100,000.00
-    numberOfInvestments: 1,
+    newInvestments: initial.newInvestments, 
+    numberOfInvestments: initial.numberOfInvestments,
     years(){
       const years = []
       const newInvestments = -this.newInvestments * this.numberOfInvestments
@@ -50,7 +56,71 @@ function calculator(){
         years.push(nextYear(years, newInvestments))      
       }
       return years
+    },
+    getBiggerValue(){
+      const years = this.years()
+      return parseFloat(years[years.length - 1].totalInvested)
+    },
+    getSmalledValue(){
+      const years = this.years()
+      return years[0].totalInvested
+    },
+    toSpecialNotation(value){
+      if(value > 1000000){
+        return parseInt(value / 1000000) + 'M'
+      }
+      else if(value > 1000){
+        return parseInt(value / 1000) + 'K'
+      }
+      else {
+        return value
+      }
+    },
+    selectedYears(){
+      const years = this.years()
+      const result = {
+        1: years[1],
+        2: years[2],
+        3: years[3],
+        4: years[4],
+        5: years[5],
+        10: years[10],
+        15: years[15],
+        20: years[20],
+        25: years[25],
+        30: years[30],
+      }
+      return result
     }
   }
   
+}
+
+function accordion(){
+  return {
+    open: false,
+    toggle(){
+      this.open = !this.open
+    }
+  }
+}
+
+function multiStepForm(){
+  return {
+    values: {
+      numberOfInvestments: 100000,
+      newInvestments: 1
+    },
+    step: 1,
+    submit(){
+      if(this.step == 2){
+        window.location = `/results.html?newInvestments=${newInvestments}&numberOfInvestments=${numberOfInvestments}`;
+      } else {
+        this.step += 1
+      }
+    },
+    back(){
+      this.step -= 1
+    }
+  }
 }
